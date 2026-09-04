@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routers import trace
+from app.core.audit_middleware import AuditMiddleware
 from app.core.config import settings
 from app.core.logging import CorrelationIdMiddleware, setup_logging
 
@@ -24,6 +25,8 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
+
+app.add_middleware(AuditMiddleware)
 
 # Attach Correlation ID middleware first (ES-05)
 app.add_middleware(CorrelationIdMiddleware)

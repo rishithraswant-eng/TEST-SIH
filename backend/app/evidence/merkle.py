@@ -39,11 +39,8 @@ class MerkleEngine:
         idx = target_idx
         
         while len(current_layer) > 1:
-            if len(current_layer) % 2 != 0:
-                current_layer.append(current_layer[-1])
-                
             next_layer = []
-            for i in range(0, len(current_layer), 2):
+            for i in range(0, len(current_layer) - 1, 2):
                 h1 = current_layer[i]
                 h2 = current_layer[i+1]
                 next_layer.append(cls._hash(h1 + h2))
@@ -56,6 +53,9 @@ class MerkleEngine:
                         sibling_hashes.append(h1)
                         is_left_node.append(True)
                         
+            if len(current_layer) % 2 != 0:
+                next_layer.append(current_layer[-1])
+                
             current_layer = next_layer
             idx = idx // 2
             
