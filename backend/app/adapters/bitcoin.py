@@ -1,8 +1,11 @@
+from decimal import Decimal
+from typing import Any
+
 import base58
 import bech32
-from typing import Dict, Any, List, Optional
-from decimal import Decimal
-from backend.app.adapters.base import ChainAdapter
+
+from app.adapters.base import ChainAdapter
+
 
 def bech32m_verify_checksum(hrp, data):
     return bech32.bech32_polymod(bech32.bech32_hrp_expand(hrp) + data) == 0x2bc830a3
@@ -64,27 +67,27 @@ class BitcoinAdapter(ChainAdapter):
             return raw_address.lower()
         return raw_address
         
-    async def fetch_address_activity(self, address: str, start_time: Optional[float] = None, end_time: Optional[float] = None) -> List[Dict[str, Any]]:
+    async def fetch_address_activity(self, address: str, start_time: float | None = None, end_time: float | None = None) -> list[dict[str, Any]]:
         # Mock implementation for tests
         return []
         
-    async def fetch_transaction(self, tx_hash: str) -> Dict[str, Any]:
+    async def fetch_transaction(self, tx_hash: str) -> dict[str, Any]:
         # Mock implementation
         return {}
         
-    async def fetch_block_header(self, block_number: int) -> Dict[str, Any]:
+    async def fetch_block_header(self, block_number: int) -> dict[str, Any]:
         # Mock implementation
         return {}
         
     async def get_finality_depth(self) -> int:
         return 6
         
-    async def build_inclusion_proof(self, tx_hash: str, block_number: int) -> Dict[str, Any]:
+    async def build_inclusion_proof(self, tx_hash: str, block_number: int) -> dict[str, Any]:
         # Mock implementation
         return {"proof_kind": "BTC_MERKLE_DOUBLE_SHA256"}
         
     # Bitcoin-specific heuristic methods
-    def identify_cospend_clusters(self, transaction: Dict[str, Any]) -> List[str]:
+    def identify_cospend_clusters(self, transaction: dict[str, Any]) -> list[str]:
         """
         Identifies input addresses belonging to the same entity via co-spend heuristic.
         Excludes transactions that look like CoinJoin or PayJoin.
@@ -109,7 +112,7 @@ class BitcoinAdapter(ChainAdapter):
             return input_addresses
         return []
 
-    def tag_change_addresses(self, transaction: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def tag_change_addresses(self, transaction: dict[str, Any]) -> list[dict[str, Any]]:
         """
         Identifies change outputs using heuristics.
         Returns a list of tags.

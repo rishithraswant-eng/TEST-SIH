@@ -6,6 +6,7 @@ Entry point for the FastAPI application server.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.routers import trace
 from app.core.config import settings
 from app.core.logging import CorrelationIdMiddleware, setup_logging
 
@@ -36,6 +37,9 @@ if settings.BACKEND_CORS_ORIGINS:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+
+app.include_router(trace.router, prefix=settings.API_V1_STR, tags=["Trace"])
 
 
 @app.get("/health", tags=["System"])

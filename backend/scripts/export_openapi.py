@@ -11,7 +11,7 @@ from pathlib import Path
 backend_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_dir))
 
-from app.main import app
+from app.main import app  # noqa: E402
 
 
 def export_schema(output_path: Path):

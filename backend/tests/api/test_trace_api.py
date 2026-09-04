@@ -1,8 +1,9 @@
-import pytest
-from fastapi.testclient import TestClient
-from fastapi import FastAPI
-from app.api.routers import trace
 from unittest.mock import patch
+
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+
+from app.api.routers import trace
 
 app = FastAPI()
 app.include_router(trace.router)
@@ -11,7 +12,7 @@ client = TestClient(app)
 @patch("app.api.routers.trace.AttributionOrchestrator.trace")
 @patch("app.api.routers.trace.MerkleEngine.build_proof")
 def test_trace_api_endpoint(mock_build_proof, mock_trace):
-    from app.attribution.models import TraceResult, ConfidenceResult
+    from app.attribution.models import ConfidenceResult, TraceResult
     
     mock_trace.return_value = TraceResult(
         path=["seed", "vasp"],

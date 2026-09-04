@@ -1,24 +1,26 @@
 import pytest
-from backend.app.adapters.bitcoin import BitcoinAdapter
+
+from app.adapters.bitcoin import BitcoinAdapter
+
 
 def test_bitcoin_detect_address():
     adapter = BitcoinAdapter()
     
     # Valid Base58 P2PKH
-    assert adapter.detect_address("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa") == True
+    assert adapter.detect_address("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
     # Valid Base58 P2SH
-    assert adapter.detect_address("3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy") == True
+    assert adapter.detect_address("3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy")
     
     # Valid Bech32 P2WPKH
-    assert adapter.detect_address("bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4") == True
+    assert adapter.detect_address("bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4")
     # Valid Bech32m P2TR
-    assert adapter.detect_address("bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297") == True
+    assert adapter.detect_address("bc1p5d7rjq7g6rdk2yhzks9smlaqtedr4dekq08ge8ztwac72sfr9rusxg3297")
     
     # Invalid addresses
-    assert adapter.detect_address("bc1invalid") == False
-    assert adapter.detect_address("1InvalidBase58_O0I") == False
-    assert adapter.detect_address("") == False
-    assert adapter.detect_address("0x71C7656EC7ab88b098defB751B7401B5f6d8976F") == False
+    assert not adapter.detect_address("bc1invalid")
+    assert not adapter.detect_address("1InvalidBase58_O0I")
+    assert not adapter.detect_address("")
+    assert not adapter.detect_address("0x71C7656EC7ab88b098defB751B7401B5f6d8976F")
 
 def test_bitcoin_normalize():
     adapter = BitcoinAdapter()

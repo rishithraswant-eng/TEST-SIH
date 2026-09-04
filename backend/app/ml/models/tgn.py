@@ -1,8 +1,7 @@
 import torch
-import torch.nn as nn
-from torch_geometric.nn.models.tgn import TGNMemory
-from torch_geometric.nn.models.tgn import LastNeighborLoader
+from torch import nn
 from torch_geometric.nn import TransformerConv
+from torch_geometric.nn.models.tgn import TGNMemory
 
 # Note: TGN requires streaming temporal data (temporal batches). 
 # The small static fixture graph used during mock evaluation is too small 
