@@ -1,14 +1,29 @@
 
 import enum
+
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, ForeignKey, Numeric, 
-    Text, SmallInteger, BigInteger, LargeBinary, CheckConstraint, 
-    UniqueConstraint, Index, func, Float, Date, ARRAY
+    ARRAY,
+    BigInteger,
+    Boolean,
+    CheckConstraint,
+    Column,
+    Date,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    LargeBinary,
+    Numeric,
+    SmallInteger,
+    String,
+    Text,
+    UniqueConstraint,
+    func,
 )
-from sqlalchemy.dialects.postgresql import UUID, INET, JSONB
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.dialects.postgresql import INET, JSONB, UUID
 
 from app.models.base import Base
+
 
 # ==========================================
 # ENUMS

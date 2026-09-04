@@ -1,9 +1,11 @@
 import hashlib
-import json
-from typing import List, Dict, Any, Tuple
+from typing import Any
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from backend.app.models.canonical import AuditLog
+
+from app.models.canonical import AuditLog
+
 
 class AuditVerificationException(Exception):
     pass
@@ -19,7 +21,7 @@ class AuditVerifier:
         return hasher.digest()
 
     @staticmethod
-    async def verify_audit_chain(session: AsyncSession, start_id: int = None, end_id: int = None) -> Tuple[bool, List[Dict[str, Any]]]:
+    async def verify_audit_chain(session: AsyncSession, start_id: int = None, end_id: int = None) -> tuple[bool, list[dict[str, Any]]]:
         """
         Verifies the integrity of the audit chain by recomputing hashes.
         Returns a tuple of (is_valid, list_of_errors).
@@ -32,7 +34,7 @@ class AuditVerifier:
             query = query.filter(AuditLog.id <= end_id)
 
         result = await session.execute(query)
-        logs: List[AuditLog] = result.scalars().all()
+        logs: list[AuditLog] = result.scalars().all()
 
         errors = []
         expected_prev_hash = None

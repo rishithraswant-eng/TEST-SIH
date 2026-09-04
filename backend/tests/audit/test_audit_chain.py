@@ -1,8 +1,11 @@
-import pytest
 import hashlib
 from unittest.mock import AsyncMock, MagicMock
-from backend.app.models.canonical import AuditLog
-from backend.app.audit.verifier import AuditVerifier
+
+import pytest
+
+from app.audit.verifier import AuditVerifier
+from app.models.canonical import AuditLog
+
 
 @pytest.mark.asyncio
 async def test_audit_chain_valid():

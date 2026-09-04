@@ -1,8 +1,10 @@
 import logging
-from typing import Dict, Any, List, Optional
-from backend.app.core.config import settings
+from typing import Any
+
+from app.core.config import settings
+
 try:
-    from neo4j import AsyncGraphDatabase, AsyncSession
+    from neo4j import AsyncGraphDatabase
 except ImportError:
     pass # Will be handled if not installed, but for mock tests we'll use a MockDriver
 
@@ -77,7 +79,7 @@ class Neo4jRouter:
             for q in queries:
                 await session.run(q)
 
-    async def project_address(self, chain_id: int, address_data: Dict[str, Any]):
+    async def project_address(self, chain_id: int, address_data: dict[str, Any]):
         """Idempotent MERGE projection from PostgreSQL -> Neo4j for Address"""
         db = self.get_database_for_chain(chain_id)
         query = """
@@ -92,7 +94,7 @@ class Neo4jRouter:
         async with self.driver.session(database=db) as session:
             await session.run(query, **address_data)
 
-    async def project_transaction(self, chain_id: int, tx_data: Dict[str, Any]):
+    async def project_transaction(self, chain_id: int, tx_data: dict[str, Any]):
         """Idempotent MERGE projection from PostgreSQL -> Neo4j for Transaction"""
         db = self.get_database_for_chain(chain_id)
         query = """
@@ -105,7 +107,7 @@ class Neo4jRouter:
         async with self.driver.session(database=db) as session:
             await session.run(query, **tx_data)
 
-    async def project_transfer(self, chain_id: int, transfer_data: Dict[str, Any]):
+    async def project_transfer(self, chain_id: int, transfer_data: dict[str, Any]):
         """Idempotent MERGE projection for Transfer (Edge)"""
         db = self.get_database_for_chain(chain_id)
         query = """
@@ -126,28 +128,34 @@ class Neo4jRouter:
     async def q1_trace_paths(self, chain_id: int, seed_id: str, max_depth: int = 12):
         db = self.get_database_for_chain(chain_id)
         # high-degree node guard applied inline
-        query = """
-        MATCH p = (seed:Address {pg_id: $seed_id})-[r:TRANSFERRED*1..$max_depth]->(terminal:Address)
+        # Neo4j does not allow parameters for variable-length relationship bounds,
+        # so max_depth (an int) is validated and embedded directly into the query text.
+        max_depth = int(max_depth)
+        query = f"""
+        MATCH p = (seed:Address {{pg_id: $seed_id}})-[r:TRANSFERRED*1..{max_depth}]->(terminal:Address)
         WHERE ALL(n IN nodes(p) WHERE n.is_high_degree = false OR n = seed OR n = terminal)
         RETURN p
         LIMIT 100
         """
         async with self.driver.session(database=db) as session:
-            return await session.run(query, seed_id=seed_id, max_depth=max_depth)
+            return await session.run(query, seed_id=seed_id)
 
     # Q2: Shortest path between two addresses
     async def q2_shortest_path(self, chain_id: int, src_id: str, dst_id: str, max_depth: int = 12):
         db = self.get_database_for_chain(chain_id)
-        query = """
-        MATCH p = shortestPath((src:Address {pg_id: $src_id})-[*1..$max_depth]-(dst:Address {pg_id: $dst_id}))
+        # Neo4j does not allow parameters for variable-length relationship bounds,
+        # so max_depth (an int) is validated and embedded directly into the query text.
+        max_depth = int(max_depth)
+        query = f"""
+        MATCH p = shortestPath((src:Address {{pg_id: $src_id}})-[*1..{max_depth}]-(dst:Address {{pg_id: $dst_id}}))
         WHERE ALL(n IN nodes(p) WHERE n.is_high_degree = false OR n IN [src, dst])
         RETURN p
         """
         async with self.driver.session(database=db) as session:
-            return await session.run(query, src_id=src_id, dst_id=dst_id, max_depth=max_depth)
+            return await session.run(query, src_id=src_id, dst_id=dst_id)
 
     # Q3: Common spenders/receivers
-    async def q3_common_counterparties(self, chain_id: int, addresses: List[str]):
+    async def q3_common_counterparties(self, chain_id: int, addresses: list[str]):
         db = self.get_database_for_chain(chain_id)
         query = """
         UNWIND $addresses AS addr_id

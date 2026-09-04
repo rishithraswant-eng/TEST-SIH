@@ -1,11 +1,13 @@
 import os
-from datetime import datetime
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
+from xml.sax.saxutils import escape
+
 from reportlab.lib import colors
-from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table
+
 from app.evidence.sealer import SealedEvidence
+
 
 class DossierGenerator:
     def __init__(self, output_dir: str = "storage/dossiers"):
@@ -33,13 +35,13 @@ class DossierGenerator:
         elements = []
         
         # Header
-        elements.append(Paragraph(f"FORENSIC TRACE DOSSIER (Section 63 BSA / 65B IEA)", self.styles['Heading1']))
+        elements.append(Paragraph("FORENSIC TRACE DOSSIER (Section 63 BSA / 65B IEA)", self.styles['Heading1']))
         elements.append(Spacer(1, 12))
         
-        # Metadata
-        elements.append(Paragraph(f"<b>Case Reference:</b> {case_ref}", self.styles['Normal']))
-        elements.append(Paragraph(f"<b>FIR Number:</b> {fir_num}", self.styles['Normal']))
-        elements.append(Paragraph(f"<b>IO Designation:</b> {io_desig}", self.styles['Normal']))
+        # Metadata (escape user-supplied text to avoid breaking ReportLab's markup parser)
+        elements.append(Paragraph(f"<b>Case Reference:</b> {escape(case_ref)}", self.styles['Normal']))
+        elements.append(Paragraph(f"<b>FIR Number:</b> {escape(fir_num)}", self.styles['Normal']))
+        elements.append(Paragraph(f"<b>IO Designation:</b> {escape(io_desig)}", self.styles['Normal']))
         elements.append(Paragraph(f"<b>Sealed At:</b> {evidence.sealed_at}", self.styles['Normal']))
         elements.append(Paragraph(f"<b>Snapshot ID:</b> {evidence.snapshot_id}", self.styles['Normal']))
         elements.append(Spacer(1, 12))
@@ -48,9 +50,9 @@ class DossierGenerator:
         elements.append(Paragraph("<b>Attributed Trace Path [Citation: Graph Engine]</b>", self.styles['Heading2']))
         path = evidence.trace_result.path
         if path:
-            elements.append(Paragraph(f"Seed Address: {path[0]}", self.styles['Normal']))
-            elements.append(Paragraph(f"Attributed VASP: {evidence.trace_result.vasp_node}", self.styles['Normal']))
-            
+            elements.append(Paragraph(f"Seed Address: {escape(path[0])}", self.styles['Normal']))
+            elements.append(Paragraph(f"Attributed VASP: {escape(evidence.trace_result.vasp_node or '')}", self.styles['Normal']))
+
             data = [["Hop", "Address"]]
             for idx, addr in enumerate(path):
                 data.append([str(idx), addr])
@@ -81,8 +83,8 @@ class DossierGenerator:
         # Merkle Proofs
         elements.append(Paragraph("<b>Cryptographic Verification [Citation: Merkle Inclusion]</b>", self.styles['Heading2']))
         for p in evidence.merkle_proofs:
-            elements.append(Paragraph(f"Tx Hash: {p.tx_hash}", self.styles['Normal']))
-            elements.append(Paragraph(f"Merkle Root: {p.merkle_root}", self.styles['Normal']))
+            elements.append(Paragraph(f"Tx Hash: {escape(p.tx_hash)}", self.styles['Normal']))
+            elements.append(Paragraph(f"Merkle Root: {escape(p.merkle_root)}", self.styles['Normal']))
             elements.append(Spacer(1, 6))
             
         # Build Document

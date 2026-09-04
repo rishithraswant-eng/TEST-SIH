@@ -1,10 +1,11 @@
+import logging
 import time
 import uuid
-import logging
+
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
+
 from app.core.security import verify_access_token
-import jwt
 
 logger = logging.getLogger(__name__)
 

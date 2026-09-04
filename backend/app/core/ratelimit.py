@@ -1,7 +1,8 @@
 import asyncio
 import time
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable, Any
+
 
 class AsyncTokenBucket:
     def __init__(self, capacity: float, fill_rate: float):

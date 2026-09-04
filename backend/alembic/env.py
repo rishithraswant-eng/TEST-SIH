@@ -1,7 +1,8 @@
+import os
+import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
@@ -14,12 +15,10 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-import os
-import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from app.models.canonical import Base
-from app.core.config import settings
+from app.core.config import settings  # noqa: E402
+from app.models.canonical import Base  # noqa: E402
 
 target_metadata = Base.metadata
 

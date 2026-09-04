@@ -1,12 +1,13 @@
-from typing import Dict, Any, List, Set
-from collections import defaultdict
+from collections import defaultdict, deque
+
 from app.core.config import settings
+
 
 class PPREngine:
     def __init__(self, high_degree_threshold: int = settings.HIGH_DEGREE_THRESHOLD):
         self.high_degree_threshold = high_degree_threshold
 
-    def compute_trace(self, seed_wallet: str, graph_edges: List[tuple], vasp_nodes: Set[str], node_degrees: Dict[str, int]) -> tuple:
+    def compute_trace(self, seed_wallet: str, graph_edges: list[tuple], vasp_nodes: set[str], node_degrees: dict[str, int]) -> tuple:
         """
         Bidirectional Personalised PageRank logic.
         seed_wallet: starting node ID
@@ -19,22 +20,22 @@ class PPREngine:
         for u, v in graph_edges:
             adj[u].append(v)
             
-        visited = set()
-        queue = [(seed_wallet, [seed_wallet])]
-        
+        visited = {seed_wallet}
+        queue = deque([(seed_wallet, [seed_wallet])])
+
         while queue:
-            current, path = queue.pop(0)
-            
+            current, path = queue.popleft()
+
             if current in vasp_nodes:
                 return path, current
-                
+
             # High-degree guard
             if node_degrees.get(current, 0) > self.high_degree_threshold:
                 continue
-                
-            visited.add(current)
+
             for neighbor in adj[current]:
                 if neighbor not in visited:
+                    visited.add(neighbor)
                     queue.append((neighbor, path + [neighbor]))
-                    
+
         return [], None
