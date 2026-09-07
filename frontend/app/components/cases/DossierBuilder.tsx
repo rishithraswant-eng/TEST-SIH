@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ArrowLeft, Lock, CheckSquare, Square, Download, FileText, ChevronDown, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Lock, CheckSquare, Square, Download, FileText, ChevronDown, CheckCircle, AlertTriangle } from 'lucide-react';
 
 interface DossierBuilderProps {
   onBack: () => void;
@@ -87,7 +87,9 @@ export default function DossierBuilder({ onBack }: DossierBuilderProps) {
                     <CheckSquare className="w-4 h-4 text-phantasm-cyan opacity-50" />
                   </div>
                   <span className="ml-2 text-sm text-gray-400 flex-1">{section}</span>
-                  <Lock className="w-3.5 h-3.5 text-gray-600 ml-2 mt-0.5 group-hover:text-phantasm-amber transition-colors" title="Mandatory section cannot be removed." />
+                  <span title="Mandatory section cannot be removed.">
+                    <Lock className="w-3.5 h-3.5 text-gray-600 ml-2 mt-0.5 group-hover:text-phantasm-amber transition-colors" />
+                  </span>
                 </div>
               ))}
               
@@ -96,7 +98,9 @@ export default function DossierBuilder({ onBack }: DossierBuilderProps) {
                   <CheckSquare className="w-4 h-4 text-red-500 opacity-50" />
                 </div>
                 <span className="ml-2 text-sm font-semibold text-red-400 flex-1">LIMITATIONS AND KNOWN FAILURE MODES</span>
-                <Lock className="w-3.5 h-3.5 text-red-500/50 ml-2 mt-0.5 group-hover:text-red-400 transition-colors" title="Critical legal requirement. Cannot be removed." />
+                <span title="Critical legal requirement. Cannot be removed.">
+                  <Lock className="w-3.5 h-3.5 text-red-500/50 ml-2 mt-0.5 group-hover:text-red-400 transition-colors" />
+                </span>
               </div>
             </div>
           </div>

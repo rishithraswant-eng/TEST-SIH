@@ -19,45 +19,53 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-900">
-      <div className="p-8 bg-slate-800 shadow-xl rounded-2xl w-full max-w-md border border-slate-700">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">PHANTASM Secure Login</h1>
+    <div className="flex items-center justify-center min-h-screen warm-editorial-bg p-4">
+      <div className="p-8 nova-glass-card rounded-3xl w-full max-w-md border border-[#E5DACB] shadow-lg">
+        <h1 className="text-2xl font-serif font-semibold text-[#5C1A1B] mb-6 text-center">
+          PHANTASM Secure Login
+        </h1>
         
         {error && (
-          <div className="mb-4 p-3 bg-red-900/50 border border-red-500 rounded text-red-200 text-sm">
+          <div className="mb-4 p-3 bg-[#F5ECE8] border border-[#DFC4BE] rounded-xl text-[#7D2924] text-xs font-semibold">
             {error}
           </div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-slate-300 text-sm font-medium mb-1">User ID / Badge Number</label>
+            <label className="block text-[#2A211C] text-xs uppercase tracking-wider font-bold mb-1.5">
+              User ID / Badge Number
+            </label>
             <input 
               type="text" 
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
-              className="w-full p-2.5 rounded bg-slate-900 border border-slate-600 text-white focus:ring-2 focus:ring-blue-500 outline-none transition" 
+              className="w-full nova-glass-input rounded-xl px-4 py-3 text-sm font-semibold text-[#2A211C] placeholder:text-[#A19488] focus:outline-none" 
               placeholder="e.g. IO-10492"
             />
           </div>
 
           <div>
-            <label className="block text-slate-300 text-sm font-medium mb-1">Password</label>
+            <label className="block text-[#2A211C] text-xs uppercase tracking-wider font-bold mb-1.5">
+              Password
+            </label>
             <input 
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2.5 rounded bg-slate-900 border border-slate-600 text-white focus:ring-2 focus:ring-blue-500 outline-none transition" 
+              className="w-full nova-glass-input rounded-xl px-4 py-3 text-sm font-semibold text-[#2A211C] placeholder:text-[#A19488] focus:outline-none" 
             />
           </div>
 
           <div>
-            <label className="block text-slate-300 text-sm font-medium mb-1">MFA Authenticator Code</label>
+            <label className="block text-[#2A211C] text-xs uppercase tracking-wider font-bold mb-1.5">
+              MFA Authenticator Code
+            </label>
             <input 
               type="text" 
               value={totp}
               onChange={(e) => setTotp(e.target.value)}
-              className="w-full p-2.5 rounded bg-slate-900 border border-slate-600 text-white focus:ring-2 focus:ring-blue-500 outline-none transition font-mono tracking-widest" 
+              className="w-full nova-glass-input rounded-xl px-4 py-3 text-sm font-mono tracking-widest text-[#2A211C] placeholder:text-[#A19488] focus:outline-none" 
               placeholder="000 000"
               maxLength={6}
             />
@@ -65,7 +73,7 @@ export default function LoginForm() {
 
           <button 
             type="submit"
-            className="w-full mt-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg shadow-lg shadow-blue-500/30 transition duration-200"
+            className="w-full mt-6 py-3.5 nova-btn-primary font-bold rounded-full text-xs tracking-wider uppercase shadow-md transition duration-200"
           >
             Authenticate & Proceed
           </button>
@@ -74,3 +82,4 @@ export default function LoginForm() {
     </div>
   );
 }
+

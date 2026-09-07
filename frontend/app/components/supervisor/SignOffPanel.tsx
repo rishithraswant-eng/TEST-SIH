@@ -18,25 +18,27 @@ export default function SignOffPanel({ confidenceScore, recipientDesignation, on
   };
 
   return (
-    <div className="p-6 bg-slate-800 rounded-xl border border-slate-700 shadow-xl max-w-lg mx-auto">
-      <h2 className="text-xl font-bold text-white mb-4 border-b border-slate-700 pb-2">Supervisor SAHYOG Sign-Off</h2>
+    <div className="p-7 nova-glass-card rounded-[28px] border border-[#E5DACB] shadow-lg max-w-lg mx-auto space-y-5">
+      <h2 className="text-xl font-serif font-semibold text-[#5C1A1B] border-b border-[#E5DACB] pb-3">
+        Supervisor SAHYOG Sign-Off
+      </h2>
       
-      <div className="mb-6 space-y-3">
-        <div className="flex justify-between items-center p-3 bg-slate-900 rounded border border-slate-600">
-          <span className="text-slate-400 text-sm">Algorithmic Confidence</span>
-          <span className={`font-bold ${confidenceScore >= 0.85 ? 'text-green-400' : 'text-amber-400'}`}>
+      <div className="space-y-3">
+        <div className="flex justify-between items-center p-3.5 bg-[#FAF5EE] rounded-xl border border-[#E5DACB]">
+          <span className="text-[#736357] text-xs uppercase tracking-wider font-bold">Algorithmic Confidence</span>
+          <span className={`font-mono font-bold ${confidenceScore >= 0.85 ? 'text-[#4B5E40]' : 'text-[#8A5C14]'}`}>
             {(confidenceScore * 100).toFixed(1)}%
           </span>
         </div>
         
-        <div className="flex justify-between items-center p-3 bg-slate-900 rounded border border-slate-600">
-          <span className="text-slate-400 text-sm">Named Recipient</span>
-          <span className="text-white font-medium">{recipientDesignation}</span>
+        <div className="flex justify-between items-center p-3.5 bg-[#FAF5EE] rounded-xl border border-[#E5DACB]">
+          <span className="text-[#736357] text-xs uppercase tracking-wider font-bold">Named Recipient</span>
+          <span className="text-[#2A211C] font-semibold text-sm">{recipientDesignation}</span>
         </div>
       </div>
 
-      <div className="p-4 bg-blue-900/20 border border-blue-500/30 rounded-lg mb-6">
-        <p className="text-sm text-blue-200 mb-3">
+      <div className="p-4 bg-[#F5ECE8] border border-[#DFC4BE] rounded-xl">
+        <p className="text-xs font-medium text-[#7D2924] mb-3 leading-relaxed">
           To authorize this dispatch, please re-authenticate using your MFA token. This action will be immutably recorded in the audit log.
         </p>
         <input 
@@ -44,7 +46,7 @@ export default function SignOffPanel({ confidenceScore, recipientDesignation, on
           value={totp}
           onChange={(e) => setTotp(e.target.value)}
           placeholder="6-digit MFA"
-          className="w-full p-2.5 rounded bg-slate-900 border border-slate-600 text-white font-mono tracking-widest focus:ring-2 focus:ring-blue-500 outline-none"
+          className="w-full nova-glass-input rounded-xl px-4 py-3 text-sm font-mono tracking-widest text-[#2A211C] placeholder:text-[#A19488] focus:outline-none"
           maxLength={6}
         />
       </div>
@@ -52,10 +54,11 @@ export default function SignOffPanel({ confidenceScore, recipientDesignation, on
       <button 
         onClick={handleSignOff}
         disabled={totp.length !== 6}
-        className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded shadow-lg transition"
+        className="w-full py-3.5 nova-btn-primary font-bold text-xs tracking-wider uppercase rounded-full shadow-md transition"
       >
         Authorize SAHYOG Dispatch
       </button>
     </div>
   );
 }
+

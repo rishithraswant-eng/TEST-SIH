@@ -1,240 +1,289 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Network, FileText, CheckCircle, Activity, Play } from 'lucide-react';
-import LiveProgress from './LiveProgress';
-import GraphCanvasView from './GraphCanvasView';
-import DossierBuilder from './DossierBuilder';
+import React, { useState } from 'react';
+import { 
+  Network, 
+  FileText, 
+  CheckCircle2, 
+  Activity, 
+  Play, 
+  ArrowLeft,
+  Sparkles,
+  Clock,
+  RefreshCw,
+  Eye,
+  FileCheck2,
+  Lock
+} from 'lucide-react';
 
-export default function CaseWorkspace() {
-  const [isTracing, setIsTracing] = useState(false);
-  const [isTraceComplete, setIsTraceComplete] = useState(false);
-  const [activeView, setActiveView] = useState<'workspace' | 'graph' | 'dossier'>('workspace');
-  const [scenario, setScenario] = useState<'A' | 'B'>('A');
+interface CaseWorkspaceProps {
+  authority?: {
+    statuteRef: string;
+    firNumber: string;
+    policeStation: string;
+    ioDesignation: string;
+  };
+  seedAddress?: string;
+  detectedChain?: string;
+  investigationMode?: 'standard' | 'deep_ml';
+  onReset?: () => void;
+}
 
-  useEffect(() => {
-    const handlePopState = (e: PopStateEvent) => {
-      if (e.state && e.state.view) {
-        setActiveView(e.state.view);
-      } else {
-        // Parse from URL if no state (e.g., initial load with query param)
-        const params = new URLSearchParams(window.location.search);
-        const viewParam = params.get('view') as any;
-        if (viewParam === 'graph' || viewParam === 'dossier') {
-           setActiveView(viewParam);
-        } else {
-           setActiveView('workspace');
-        }
-      }
-    };
+export default function CaseWorkspace({
+  authority = {
+    statuteRef: 'Sec 94 BNSS',
+    firNumber: 'FIR-2026/08/891',
+    policeStation: 'Special Cyber Crime Branch',
+    ioDesignation: 'Inspector A. Sharma'
+  },
+  seedAddress = '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+  detectedChain = 'Bitcoin',
+  investigationMode = 'deep_ml',
+  onReset = () => {}
+}: CaseWorkspaceProps) {
+  const [isIngesting, setIsIngesting] = useState(false);
+  const [ingested, setIngested] = useState(false);
+  const [dossierSigned, setDossierSigned] = useState(false);
+  const [ingestionStep, setIngestionStep] = useState(0);
+  const [selectedNode, setSelectedNode] = useState<{
+    id: string;
+    label: string;
+    type: string;
+    taint: number;
+    volume: string;
+    hops: number;
+    flag: string;
+  } | null>({
+    id: seedAddress || '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+    label: 'Root Seed Target',
+    type: 'Origin UTXO',
+    taint: 0.94,
+    volume: '42.85 BTC (~$2.91M)',
+    hops: 0,
+    flag: 'CRITICAL_EXTORTION_SEED'
+  });
+  const [filterType, setFilterType] = useState('all');
+
+  const steps = [
+    'Connecting to Decentralized Blockchain RPC Gateways...',
+    'Extracting UTXO & Token Balance Histories...',
+    'Executing Hawkes Process Temporal Intensity Scoring...',
+    'Running Elliptic Graph Neural Network (GNN) Attribution...',
+    'Materializing Sharded Clusters into Neo4j Graph Database...'
+  ];
+
+  const handleStartIngestion = () => {
+    setIsIngesting(true);
+    setIngestionStep(0);
     
-    // Initial sync
-    handlePopState({ state: window.history.state } as PopStateEvent);
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  const navigateTo = (view: 'workspace' | 'graph' | 'dossier') => {
-    setActiveView(view);
-    window.history.pushState({ view }, '', `?view=${view}`);
+    const interval = setInterval(() => {
+      setIngestionStep(prev => {
+        if (prev < steps.length - 1) {
+          return prev + 1;
+        } else {
+          clearInterval(interval);
+          setIsIngesting(false);
+          setIngested(true);
+          return prev;
+        }
+      });
+    }, 600);
   };
 
-  if (activeView === 'graph') {
-    return <GraphCanvasView onBack={() => navigateTo('workspace')} scenario={scenario} />;
-  }
+  const graphNodes = [
+    { id: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', label: 'Seed Origin', type: 'Seed', taint: 0.95, volume: '42.85 BTC', hops: 0, flag: 'PRIMARY_TARGET', x: 70, y: 120, color: '#B08D57' },
+    { id: '3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy', label: 'Peeling Chain Alpha', type: 'Hop 1', taint: 0.88, volume: '28.10 BTC', hops: 1, flag: 'SPLITTER', x: 150, y: 60, color: '#6B1E24' },
+    { id: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh', label: 'Intermediary Relay', type: 'Hop 1', taint: 0.82, volume: '14.75 BTC', hops: 1, flag: 'RELAY', x: 150, y: 180, color: '#6B1E24' },
+    { id: '34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo', label: 'Mixer Inflow Hub', type: 'Mixer', taint: 0.91, volume: '19.40 BTC', hops: 2, flag: 'TORNADO_STYLE_MIXER', x: 260, y: 80, color: '#5C1A1B' },
+    { id: '1NDyJtNTjmwk5xPNhjgAMu4HDHigtobu1s', label: 'Cashout Broker', type: 'Hop 2', taint: 0.74, volume: '12.20 BTC', hops: 2, flag: 'P2P_BROKER', x: 260, y: 160, color: '#A85332' },
+    { id: '0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE', label: 'Offshore Exchange VASP', type: 'VASP', taint: 0.98, volume: '38.50 BTC', hops: 3, flag: 'OFFSHORE_VASP_DEPOSIT', x: 360, y: 120, color: '#801824' }
+  ];
 
-  if (activeView === 'dossier') {
-    return <DossierBuilder onBack={() => navigateTo('workspace')} />;
-  }
   return (
-    <div className="h-full flex flex-col space-y-6">
-      
-      {/* Top Bar / Status */}
-      <div className="bg-phantasm-surface border border-phantasm-border rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center shadow-lg">
-        <div>
-          <div className="flex items-center space-x-3 mb-2">
-            <h1 className="text-2xl font-bold text-gray-100">Case: PHT-8991</h1>
-            <span className="bg-phantasm-cyan/10 text-phantasm-cyan border border-phantasm-cyan/30 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
-              ACTIVE
+    <div className="max-w-6xl mx-auto space-y-6 py-2">
+      <div className="nova-glass-card rounded-[32px] p-6 sm:p-7 flex flex-col md:flex-row justify-between items-start md:items-center shadow-md border border-[#E5DACB] gap-4">
+        <div className="space-y-2">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={onReset}
+              className="px-3.5 py-2 rounded-2xl bg-[#FAF5EE] text-[#5C1A1B] border border-[#E5DACB] hover:bg-[#F2EAE0] transition-all shadow-none flex items-center space-x-1.5 font-bold text-xs"
+              title="Return to Case Wizard"
+            >
+              <ArrowLeft className="w-4 h-4 text-[#B08D57]" />
+              <span>EDIT SETUP</span>
+            </button>
+            <h1 className="text-2xl sm:text-3xl font-serif font-semibold text-[#5C1A1B] tracking-tight">
+              Case: {authority?.firNumber || 'FIR-2026/08/891'}
+            </h1>
+            <span className="px-3 py-1 rounded-full text-xs font-bold text-[#6B1E24] tracking-wide bg-[#F5ECE8] border border-[#DFC4BE]">
+              ACTIVE MANDATE
             </span>
           </div>
-          <p className="text-gray-400 text-sm flex items-center">
-            <FileText className="w-4 h-4 mr-2" />
-            Authority: <strong className="ml-1 text-gray-200">Sec 94 BNSS (FIR-2026/08/891)</strong>
-          </p>
-        </div>
-        
-        <div className="mt-4 md:mt-0 flex flex-col items-end">
-          <div className="flex items-center text-sm font-medium text-green-400 mb-1">
-            <CheckCircle className="w-4 h-4 mr-1.5" />
-            Lawful Status Verified
+          <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-[#736357]">
+            <span className="flex items-center">
+              <FileText className="w-3.5 h-3.5 mr-1 text-[#B08D57]" />
+              Mandate: <strong className="ml-1 text-[#2A211C]">{authority?.statuteRef || 'Sec 94 BNSS'}</strong>
+            </span>
+            <span>•</span>
+            <span>Unit: <strong className="text-[#2A211C]">{authority?.policeStation || 'Special Cyber Crime Branch'}</strong></span>
+            <span>•</span>
+            <span>IO: <strong className="text-[#2A211C]">{authority?.ioDesignation || 'Inspector A. Sharma'}</strong></span>
           </div>
-          <p className="text-xs text-gray-500 font-mono mb-2">
-            Seed: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
-          </p>
-          <div className="flex items-center space-x-2">
-             <span className="text-xs text-gray-400">Mock Scenario:</span>
-             <button 
-               onClick={() => setScenario('A')} 
-               className={`px-2 py-0.5 text-xs rounded border transition-colors ${scenario === 'A' ? 'bg-phantasm-cyan text-black border-phantasm-cyan font-bold' : 'bg-gray-800 text-gray-400 border-gray-700 hover:text-gray-200'}`}
-             >
-               A (VASP)
-             </button>
-             <button 
-               onClick={() => setScenario('B')} 
-               className={`px-2 py-0.5 text-xs rounded border transition-colors ${scenario === 'B' ? 'bg-phantasm-cyan text-black border-phantasm-cyan font-bold' : 'bg-gray-800 text-gray-400 border-gray-700 hover:text-gray-200'}`}
-             >
-               B (Mixer)
-             </button>
+        </div>
+        <div className="flex flex-col md:items-end space-y-1.5">
+          <div className="px-3.5 py-1.5 rounded-full flex items-center space-x-1.5 text-xs font-bold text-[#4B5E40] bg-[#F2F5EE] border border-[#D5DFC8]">
+            <CheckCircle2 className="w-4 h-4 text-[#5A734C]" />
+            <span>Lawful Chain of Custody Verified</span>
+          </div>
+          <div className="text-xs font-mono font-medium text-[#2A211C] flex items-center space-x-1.5 bg-[#FAF5EE] px-3 py-1 rounded-xl border border-[#E5DACB]">
+            <span className="font-bold text-[#B08D57]">{detectedChain}:</span>
+            <span className="truncate max-w-[240px]">{seedAddress}</span>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Graph Preview (Placeholder) */}
-        {isTracing ? (
-          <div className="lg:col-span-2">
-            <LiveProgress 
-              onStop={() => setIsTracing(false)} 
-              onComplete={() => {
-                setIsTracing(false);
-                setIsTraceComplete(true);
-              }}
-            />
-          </div>
-        ) : isTraceComplete ? (
-          <div className="lg:col-span-2 bg-phantasm-surface border border-phantasm-border rounded-xl shadow-lg relative overflow-hidden flex flex-col">
-            <div className="bg-phantasm-border/30 px-4 py-3 border-b border-phantasm-border flex items-center justify-between">
-              <div className="flex items-center">
-                <Network className="w-5 h-5 text-gray-400 mr-2" />
-                <h2 className="text-sm font-semibold text-gray-200">Attribution Graph Canvas</h2>
-              </div>
-              <div className="flex space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-8 nova-glass-card rounded-[32px] overflow-hidden shadow-md border border-[#E5DACB] flex flex-col min-h-[560px]">
+          <div className="bg-[#F2EAE0]/70 px-6 py-4 border-b border-[#E5DACB] flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center space-x-2.5">
+              <Network className="w-5 h-5 text-[#B08D57]" />
+              <h2 className="text-xs font-bold text-[#2A211C] tracking-[0.15em] uppercase font-sans">
+                Graph Resolution Engine (Neo4j Shard)
+              </h2>
             </div>
-            
-            <div className="flex-1 flex items-center justify-center bg-[#070A0E] relative p-8">
-              <div className="text-center w-full max-w-lg">
-                <h3 className="text-phantasm-cyan text-xl font-bold mb-4">Graph Generation Complete</h3>
-                <p className="text-gray-400 text-sm mb-6">
-                  {scenario === 'A' 
-                    ? "91.3% Confidence | 4 paths found | 1 Custodial Service identified"
-                    : "95.0% Confidence | 1 path found | Terminated at Mixer (No VASP identified)"}
-                </p>
-                <div className="border border-phantasm-border bg-phantasm-surface/50 rounded-lg p-6 mb-4 relative overflow-hidden">
-                   {/* Simplified mock nodes representation */}
-                   <div className="flex items-center justify-between text-gray-500">
-                      <div className="flex flex-col items-center"><div className="w-10 h-10 rounded-full border-2 border-phantasm-cyan/50 mb-2 flex items-center justify-center text-xs text-white bg-phantasm-surface">Seed</div></div>
-                      <div className="flex-1 border-t-2 border-dashed border-gray-700 mx-2"></div>
-                      <div className="flex flex-col items-center"><div className="w-10 h-10 rounded-full border-2 border-orange-500/50 mb-2 flex items-center justify-center text-xs text-white bg-phantasm-surface">Mule</div></div>
-                      <div className="flex-1 border-t-2 border-dashed border-gray-700 mx-2"></div>
-                      <div className="flex flex-col items-center"><div className="w-10 h-10 rounded-lg transform rotate-45 border-2 border-purple-500/50 mb-2 flex items-center justify-center bg-phantasm-surface"><span className="transform -rotate-45 text-xs text-white">Mix</span></div></div>
-                      <div className="flex-1 border-t-2 border-dashed border-gray-700 mx-2"></div>
-                      <div className="flex flex-col items-center"><div className="w-12 h-12 rounded bg-green-500/20 border-2 border-green-500 mb-2 flex items-center justify-center text-xs text-white font-bold shadow-[0_0_15px_rgba(34,197,94,0.3)]">VASP</div></div>
-                   </div>
+            <div className="flex items-center space-x-1.5">
+              {['all', 'seeds', 'mixers', 'vasps'].map(filter => (
+                <button
+                  key={filter}
+                  onClick={() => setFilterType(filter)}
+                  className={`px-3 py-1 rounded-xl text-[11px] font-bold uppercase transition-all ${
+                    filterType === filter
+                      ? 'bg-[#6B1E24] text-[#FAF5EE] shadow-none'
+                      : 'bg-[#FAF5EE] text-[#736357] border border-[#E5DACB] hover:bg-[#F2EAE0]'
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex-1 relative flex flex-col justify-between p-6 bg-gradient-to-b from-[#FAF5EE]/70 to-[#F2EAE0]/50 overflow-hidden">
+            {!ingested && !isIngesting ? (
+              <div className="m-auto text-center z-10 space-y-4 max-w-lg py-12">
+                <div className="w-20 h-20 rounded-3xl bg-[#FAF5EE] border border-[#E5DACB] flex items-center justify-center mx-auto shadow-sm">
+                  <Activity className="w-10 h-10 text-[#B08D57] animate-pulse" />
                 </div>
-                <button 
-                  onClick={() => navigateTo('graph')}
-                  className="bg-phantasm-surface border border-gray-600 hover:border-phantasm-cyan text-gray-200 px-6 py-2 rounded transition-colors text-sm font-medium"
-                >
-                  Open Interactive Graph View
-                </button>
+                <h3 className="text-lg font-serif font-semibold text-[#5C1A1B]">
+                  Attribution Engine Initialized & Idle
+                </h3>
               </div>
-            </div>
-          </div>
-        ) : (
-          <div className="lg:col-span-2 bg-phantasm-surface border border-phantasm-border rounded-xl shadow-lg relative overflow-hidden flex flex-col">
-            <div className="bg-phantasm-border/30 px-4 py-3 border-b border-phantasm-border flex items-center justify-between">
-              <div className="flex items-center">
-                <Network className="w-5 h-5 text-gray-400 mr-2" />
-                <h2 className="text-sm font-semibold text-gray-200">Graph Resolution Engine</h2>
+            ) : isIngesting ? (
+              <div className="m-auto text-center z-10 space-y-6 max-w-md py-12">
+                <RefreshCw className="w-12 h-12 text-[#6B1E24] mx-auto animate-spin" />
+                <div className="space-y-2">
+                  <h3 className="text-xs font-bold text-[#2A211C] uppercase tracking-[0.15em] font-sans">
+                    Pipeline Execution in Progress ({ingestionStep + 1}/{steps.length})
+                  </h3>
+                  <p className="text-xs font-mono font-medium text-[#5C1A1B] bg-[#FAF5EE] p-2.5 rounded-xl border border-[#E5DACB]">
+                    {steps[ingestionStep]}
+                  </p>
+                </div>
               </div>
-              <div className="flex space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-                <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-              </div>
-            </div>
-            
-            <div className="flex-1 flex items-center justify-center bg-[#050810] relative">
-              {/* Grid background effect */}
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgzMCwgNDUsIDc0LCAwLjIpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
-              
-              <div className="text-center z-10 p-8">
-                <Activity className="w-12 h-12 text-phantasm-cyan/50 mx-auto mb-4 animate-pulse" />
-                <p className="text-gray-400 text-sm max-w-md mx-auto">
-                  The engine is idle. Run an initial ingestion on the seed address to begin populating the Neo4j graph.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Guided NEXT STEP Card */}
-        <div className="flex flex-col space-y-6">
-          <div className="bg-gradient-to-b from-phantasm-surface to-[#0A0F1D] border border-phantasm-cyan/30 rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.1)] p-6">
-            <h3 className="text-phantasm-cyan font-bold tracking-wider text-sm mb-4">NEXT STEP</h3>
-            
-            {isTraceComplete ? (
-              <>
-                <h4 className="text-lg font-semibold text-gray-100 mb-2">Review Attribution</h4>
-                <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-                  Review the attribution and generate a dossier to prepare for disclosure.
-                </p>
-                <button 
-                  onClick={() => navigateTo('dossier')}
-                  className="w-full bg-green-500 text-white font-bold py-3 rounded-lg flex items-center justify-center hover:bg-opacity-90 transition-all shadow-[0_0_10px_rgba(34,197,94,0.4)] group"
-                >
-                  GENERATE DOSSIER
-                </button>
-              </>
             ) : (
-              <>
-                <h4 className="text-lg font-semibold text-gray-100 mb-2">Ingest Seed Activity</h4>
-                <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-                  Fetch the complete transaction history for the seed address using the configured providers and cross-validation gate.
-                </p>
-                
-                <button 
-                  onClick={() => setIsTracing(true)}
-                  disabled={isTracing}
-                  className="w-full bg-phantasm-cyan text-[#0A0F1D] font-bold py-3 rounded-lg flex items-center justify-center hover:bg-opacity-90 transition-all shadow-[0_0_10px_rgba(0,229,255,0.4)] group disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Play className="w-4 h-4 mr-2 fill-current" />
-                  {isTracing ? 'INGESTION IN PROGRESS' : 'START INGESTION'}
-                </button>
-                
-                <div className="mt-4 pt-4 border-t border-phantasm-cyan/10">
-                  <div className="flex justify-between text-xs text-gray-500">
-                    <span>Estimated nodes:</span>
-                    <span className="font-mono text-gray-300">~14</span>
-                  </div>
+              <div className="w-full h-full flex flex-col justify-between z-10 space-y-4">
+                <div className="flex flex-wrap items-center justify-between text-xs font-medium text-[#2A211C] bg-[#FAF5EE] p-3 rounded-2xl border border-[#E5DACB] shadow-none">
+                  <span className="flex items-center">
+                    <CheckCircle2 className="w-4 h-4 text-[#5A734C] mr-1.5" />
+                    Ingestion Complete: <strong className="ml-1 text-[#2A211C]">6 Key Entities Clustered</strong>
+                  </span>
+                  <span className="font-mono font-bold text-[#6B1E24]">Taint Density: 94.2%</span>
                 </div>
-              </>
+                <div className="relative w-full aspect-[16/9] rounded-3xl p-4 flex items-center justify-center border border-[#E5DACB] shadow-inner bg-[#FAF7F2]">
+                  <svg className="w-full h-full" viewBox="0 0 440 240">
+                    <line x1="70" y1="120" x2="150" y2="60" stroke="#B08D57" strokeWidth="2" strokeDasharray="4,4" />
+                    <line x1="70" y1="120" x2="150" y2="180" stroke="#B08D57" strokeWidth="2" strokeDasharray="4,4" />
+                    <line x1="150" y1="60" x2="260" y2="80" stroke="#6B1E24" strokeWidth="2.5" />
+                    <line x1="150" y1="180" x2="260" y2="160" stroke="#6B1E24" strokeWidth="2.5" />
+                    <line x1="260" y1="80" x2="360" y2="120" stroke="#801824" strokeWidth="3" />
+                    <line x1="260" y1="160" x2="360" y2="120" stroke="#801824" strokeWidth="3" />
+                    {graphNodes.map((node) => (
+                      <g key={node.id} onClick={() => setSelectedNode(node)} className="cursor-pointer group">
+                        <circle cx={node.x} cy={node.y} r={selectedNode?.id === node.id ? 22 : 17} fill={node.color} stroke="#FAF5EE" strokeWidth={selectedNode?.id === node.id ? 3 : 2} className="transition-all duration-300" />
+                        <text x={node.x} y={node.y + 4} fill="#FAF5EE" fontSize="8" fontWeight="bold" textAnchor="middle" className="pointer-events-none font-mono">{node.type.toUpperCase().slice(0, 4)}</text>
+                      </g>
+                    ))}
+                  </svg>
+                </div>
+              </div>
+            )}
+            {ingested && selectedNode && (
+              <div className="mt-4 rounded-2xl p-4 border border-[#E5DACB] bg-[#FAF5EE] shadow-none space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Eye className="w-4 h-4 text-[#B08D57]" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#2A211C] font-sans">
+                    Node Inspector: {selectedNode.label}
+                  </span>
+                </div>
+              </div>
             )}
           </div>
+        </div>
+
+        <div className="lg:col-span-4 space-y-6 flex flex-col justify-between">
+          <div className="nova-glass-card rounded-[32px] p-7 shadow-md border border-[#E5DACB] space-y-5">
+            <div className="flex items-center space-x-2">
+              <Sparkles className="w-4 h-4 text-[#B08D57]" />
+              <span className="text-xs font-bold tracking-[0.15em] text-[#B08D57] uppercase font-sans">
+                FORENSIC ACTIONS
+              </span>
+            </div>
+            <div className="space-y-2">
+              <h4 className="text-lg font-serif font-semibold text-[#5C1A1B]">
+                {ingested ? 'Cryptographic Court Dossier' : 'Ingest Blockchain Seed'}
+              </h4>
+            </div>
+            {!ingested ? (
+              <button 
+                onClick={handleStartIngestion}
+                disabled={isIngesting}
+                className="w-full bg-[#6B1E24] text-[#FAF5EE] font-bold py-4 rounded-full flex items-center justify-center space-x-2 text-xs tracking-wider uppercase transition-all"
+              >
+                <span>{isIngesting ? 'INGESTING...' : 'START INGESTION PIPELINE'}</span>
+              </button>
+            ) : (
+              <button 
+                onClick={() => setDossierSigned(true)}
+                className={`w-full font-bold py-4 rounded-full flex items-center justify-center space-x-2 text-xs tracking-wider uppercase transition-all ${
+                  dossierSigned ? 'bg-[#4B5E40] text-[#FAF5EE]' : 'bg-[#6B1E24] text-[#FAF5EE]'
+                }`}
+              >
+                {dossierSigned ? <><FileCheck2 className="w-4 h-4" /> <span>DOSSIER SIGNED</span></> : <><Lock className="w-4 h-4" /> <span>GENERATE COURT DOSSIER</span></>}
+              </button>
+            )}
+            <div className="pt-4 border-t border-[#E5DACB] flex justify-between items-center text-xs font-medium text-[#736357]">
+              <span>Resolution Pipeline:</span>
+              <span className="font-mono font-bold text-[#6B1E24]">Hawkes + Elliptic GNN</span>
+            </div>
+          </div>
           
-          {/* Recent Activity Log Placeholder */}
-          <div className="bg-phantasm-surface border border-phantasm-border rounded-xl p-5 flex-1">
-            <h3 className="text-gray-400 font-semibold text-sm mb-4">Activity Log</h3>
+          <div className="nova-glass-card rounded-[32px] p-7 shadow-md border border-[#E5DACB] flex-1 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold tracking-[0.15em] text-[#2A211C] uppercase font-sans">
+                AUDIT TRAIL
+              </span>
+              <Clock className="w-4 h-4 text-[#B08D57]" />
+            </div>
             <div className="space-y-3">
-              <div className="border-l-2 border-phantasm-amber pl-3 py-1">
-                <p className="text-xs text-gray-500 mb-0.5">10:42 AM</p>
-                <p className="text-sm text-gray-200">Case initialized with BNSS mandate.</p>
-              </div>
-              <div className="border-l-2 border-phantasm-border pl-3 py-1">
-                <p className="text-xs text-gray-500 mb-0.5">10:42 AM</p>
-                <p className="text-sm text-gray-400">Seed address validated (Bitcoin).</p>
+              <div className="rounded-2xl p-3.5 space-y-1 bg-[#FAF5EE] border border-[#E5DACB]">
+                <div className="flex justify-between text-[10px] font-mono text-[#8A7B70]">
+                  <span>10:42 AM</span>
+                  <span className="text-[#4B5E40] font-bold">MANDATE_REGISTERED</span>
+                </div>
+                <p className="text-xs font-semibold text-[#2A211C]">Mandate validated.</p>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

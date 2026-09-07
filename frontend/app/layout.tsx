@@ -1,20 +1,30 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Cormorant_Garamond, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-serif",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+  variable: "--font-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "PHANTASM",
-  description: "Graph Resolution Engine",
+  title: "PHANTASM — Forensic Attribution Engine",
+  description: "Graph Attribution & Forensics Resolution Engine",
 };
 
 export default function RootLayout({
@@ -25,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-phantasm-bg`}
+        className={`${inter.variable} ${cormorant.variable} ${jetbrainsMono.variable} font-sans antialiased bg-[#F5EDE4] text-[#2A211C] selection:bg-[#6B1E24]/20 selection:text-[#6B1E24]`}
       >
         {children}
       </body>

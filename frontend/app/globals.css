@@ -1,24 +1,224 @@
 @import "tailwindcss";
 
 @theme {
-  --color-phantasm-bg: #0A0F1D;
-  --color-phantasm-surface: #111A2E;
-  --color-phantasm-border: #1E2D4A;
-  --color-phantasm-cyan: #00E5FF;
-  --color-phantasm-amber: #FFB300;
+  --color-editorial-bg: #F5EDE4;
+  --color-editorial-card: #FAF5EE;
+  --color-editorial-card-subtle: #F0E6D8;
+  --color-editorial-burgundy: #6B1E24;
+  --color-editorial-burgundy-dark: #5C1A1B;
+  --color-editorial-bronze: #B08D57;
+  --color-editorial-ochre: #C58B2B;
+  --color-editorial-espresso: #2A211C;
+  --color-editorial-taupe: #8A7B70;
+  --color-editorial-border: #E5DACB;
 }
 
 @layer base {
   :root {
-    --bg: #0A0F1D;
-    --surface: #111A2E;
-    --border: #1E2D4A;
-    --cyan: #00E5FF;
-    --amber: #FFB300;
+    --bg-warm: #F5EDE4;
+    --card-warm: #FAF5EE;
+    --card-subtle: #F0E6D8;
+    --burgundy: #6B1E24;
+    --burgundy-deep: #5C1A1B;
+    --bronze: #B08D57;
+    --espresso: #2A211C;
+    --taupe: #8A7B70;
+    --border-warm: #E5DACB;
   }
-  
+
   body {
-    background-color: var(--bg);
-    color: white;
+    background-color: var(--bg-warm);
+    color: var(--espresso);
+    font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   }
+
+  h1, h2, h3, .font-serif-heading {
+    font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
+  }
+}
+
+/* Warm Editorial Background */
+.nova-luminous-bg,
+.warm-editorial-bg {
+  background: 
+    radial-gradient(ellipse at 15% 10%, rgba(253, 248, 242, 0.9) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 15%, rgba(240, 230, 216, 0.75) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(247, 240, 230, 0.6) 0%, transparent 65%),
+    radial-gradient(circle at 10% 85%, rgba(238, 226, 210, 0.7) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 90%, rgba(245, 235, 222, 0.8) 0%, transparent 45%),
+    linear-gradient(135deg, #F6EFE6 0%, #F3EAE0 35%, #F7F1E8 70%, #F5EDE4 100%);
+  min-height: 100vh;
+}
+
+/* Editorial Cream & Beige Cards */
+.nova-glass-card,
+.editorial-card {
+  background: rgba(250, 245, 238, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(229, 218, 203, 0.85);
+  box-shadow: 
+    0 16px 36px -10px rgba(78, 56, 40, 0.08),
+    0 2px 6px 0 rgba(78, 56, 40, 0.04),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+}
+
+.nova-glass-card-subtle,
+.editorial-card-subtle {
+  background: rgba(243, 235, 224, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(225, 212, 196, 0.75);
+  box-shadow: 
+    0 6px 18px -4px rgba(78, 56, 40, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+}
+
+.nova-glass-pill,
+.editorial-pill {
+  background: rgba(253, 250, 245, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(223, 211, 196, 0.9);
+  box-shadow: 
+    0 2px 10px 0 rgba(78, 56, 40, 0.05),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+}
+
+/* ========================================================================= */
+/* EDITORIAL LUXURY TYPOGRAPHY (CRISP BURGUNDY INK, HIGH CONTRAST SERIF)     */
+/* ========================================================================= */
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
+}
+
+/* PRIMARY EDITORIAL HEADING */
+.nova-3d-chrome-heading,
+.editorial-headline {
+  font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
+  font-weight: 600;
+  color: #5C1A1B;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #5C1A1B !important;
+  filter: none !important;
+  display: inline-block;
+  position: relative;
+}
+
+/* SECONDARY EDITORIAL TEXT */
+.nova-3d-chrome-text,
+.editorial-subhead {
+  font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
+  font-weight: 600;
+  color: #6B1E24;
+  letter-spacing: 0.01em;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #6B1E24 !important;
+  filter: none !important;
+  display: inline-block;
+  position: relative;
+}
+
+/* SMALL EDITORIAL SUBTEXT */
+.nova-3d-chrome-sub {
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #2A211C;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: #2A211C !important;
+  filter: none !important;
+  display: inline-block;
+}
+
+/* Warm Editorial Input Fields (Hairline Bronze/Gold Borders) */
+.nova-glass-input,
+.editorial-input {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #D9CBBF;
+  color: #2A211C;
+  font-weight: 600;
+  box-shadow: inset 0 1px 3px rgba(78, 56, 40, 0.04);
+  transition: all 0.2s ease;
+}
+
+.nova-glass-input::placeholder,
+.editorial-input::placeholder {
+  color: #9E9085;
+  font-weight: 500;
+}
+
+.nova-glass-input:focus,
+.editorial-input:focus {
+  background: #FFFFFF;
+  border-color: #B08D57;
+  box-shadow: 
+    0 0 0 3px rgba(176, 141, 87, 0.2),
+    inset 0 1px 2px rgba(78, 56, 40, 0.03);
+  outline: none;
+}
+
+/* Warm Burgundy Primary Button */
+.nova-btn-primary,
+.editorial-btn-primary {
+  background: #6B1E24;
+  color: #F7F2EC;
+  border: 1px solid #5C1A1B;
+  box-shadow: 
+    0 6px 18px -2px rgba(107, 30, 36, 0.28),
+    0 2px 4px 0 rgba(78, 56, 40, 0.08);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nova-btn-primary:hover:not(:disabled),
+.editorial-btn-primary:hover:not(:disabled) {
+  background: #54171C;
+  transform: translateY(-1px);
+  box-shadow: 
+    0 8px 24px -2px rgba(107, 30, 36, 0.35),
+    0 3px 6px 0 rgba(78, 56, 40, 0.12);
+}
+
+.nova-btn-primary:disabled,
+.editorial-btn-primary:disabled {
+  background: #D8CFC5 !important;
+  color: #8E8276 !important;
+  border-color: #CFC5BA !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+/* Subtle Ochre Progress Fill */
+.nova-progress-fill {
+  background: linear-gradient(90deg, #B08D57 0%, #6B1E24 100%);
+}
+
+/* Custom Scrollbar for Warm Aesthetic */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F0E6D8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D0C2B0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B8A692;
 }

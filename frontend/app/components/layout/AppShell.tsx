@@ -1,37 +1,64 @@
+"use client";
+
 import React from 'react';
-import { Shield, LayoutDashboard, Search, FileText, Settings, LogOut, AlertTriangle } from 'lucide-react';
+import { Shield, LayoutDashboard, Search, FileText, Settings, LogOut, AlertTriangle, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-phantasm-bg text-gray-100 font-sans flex overflow-hidden">
+    <div className="min-h-screen nova-luminous-bg text-[#2A211C] font-sans flex overflow-hidden">
       
-      {/* Sidebar */}
-      <aside className="w-64 bg-phantasm-surface border-r border-phantasm-border flex flex-col z-10 shrink-0">
-        <div className="h-16 flex items-center px-6 border-b border-phantasm-border">
-          <Shield className="w-8 h-8 text-phantasm-cyan mr-3" />
-          <span className="font-bold text-xl tracking-wider text-phantasm-cyan">PHANTASM</span>
+      {/* Editorial Beige/Cream Sidebar */}
+      <aside className="w-64 nova-glass-card border-r border-[#E5DACB] flex flex-col z-20 shrink-0 shadow-lg">
+        
+        {/* Brand Header */}
+        <div className="h-16 flex items-center px-6 border-b border-[#E5DACB]">
+          <div className="w-9 h-9 rounded-2xl flex items-center justify-center mr-3 shadow-sm bg-[#6B1E24] text-[#FAF5EE] border border-[#54171C]">
+            <Shield className="w-5 h-5 text-[#D4AF37]" />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-serif font-bold text-xl tracking-[0.2em] text-[#5C1A1B] uppercase leading-tight select-none">
+              PHANTASM
+            </span>
+          </div>
         </div>
         
+        {/* Navigation */}
         <nav className="flex-1 py-6 px-4 space-y-2">
-          <Link href="#" className="flex items-center px-4 py-3 bg-phantasm-border/50 text-phantasm-cyan rounded-lg group">
-            <LayoutDashboard className="w-5 h-5 mr-3" />
-            <span className="font-medium">Dashboard</span>
+          <Link 
+            href="#" 
+            className="flex items-center px-4 py-3 bg-[#EDE3D4] text-[#5C1A1B] border border-[#DFD2C0] font-bold shadow-sm rounded-2xl group transition-all"
+          >
+            <LayoutDashboard className="w-5 h-5 mr-3 text-[#B08D57]" />
+            <span className="text-sm font-bold tracking-wide">Dashboard</span>
+            <Sparkles className="w-3.5 h-3.5 ml-auto text-[#B08D57] animate-pulse" />
           </Link>
-          <Link href="#" className="flex items-center px-4 py-3 text-gray-400 hover:text-gray-100 hover:bg-white/5 rounded-lg transition-colors group">
-            <Search className="w-5 h-5 mr-3" />
-            <span className="font-medium">Global Search</span>
+          
+          <Link 
+            href="#" 
+            className="flex items-center px-4 py-3 text-[#756557] hover:text-[#5C1A1B] hover:bg-[#FAF4EC]/80 rounded-2xl transition-colors group"
+          >
+            <Search className="w-5 h-5 mr-3 text-[#99877A] group-hover:text-[#B08D57]" />
+            <span className="text-sm font-semibold">Global Search</span>
           </Link>
-          <Link href="#" className="flex items-center px-4 py-3 text-gray-400 hover:text-gray-100 hover:bg-white/5 rounded-lg transition-colors group">
-            <FileText className="w-5 h-5 mr-3" />
-            <span className="font-medium">Cases</span>
+          
+          <Link 
+            href="#" 
+            className="flex items-center px-4 py-3 text-[#756557] hover:text-[#5C1A1B] hover:bg-[#FAF4EC]/80 rounded-2xl transition-colors group"
+          >
+            <FileText className="w-5 h-5 mr-3 text-[#99877A] group-hover:text-[#B08D57]" />
+            <span className="text-sm font-semibold">Cases</span>
           </Link>
         </nav>
         
-        <div className="p-4 border-t border-phantasm-border">
-          <Link href="#" className="flex items-center px-4 py-3 text-gray-400 hover:text-gray-100 hover:bg-white/5 rounded-lg transition-colors group">
-            <Settings className="w-5 h-5 mr-3" />
-            <span className="font-medium">Settings</span>
+        {/* Settings */}
+        <div className="p-4 border-t border-[#E5DACB]">
+          <Link 
+            href="#" 
+            className="flex items-center px-4 py-3 text-[#756557] hover:text-[#5C1A1B] hover:bg-[#FAF4EC]/80 rounded-2xl transition-colors group"
+          >
+            <Settings className="w-5 h-5 mr-3 text-[#99877A] group-hover:text-[#B08D57]" />
+            <span className="text-sm font-semibold">Settings</span>
           </Link>
         </div>
       </aside>
@@ -39,24 +66,26 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col relative overflow-hidden">
         
-        {/* NON-DISMISSIBLE MOCK CHIP - Rendered unconditionally and fixed */}
-        <div className="w-full bg-phantasm-amber/20 border-b border-phantasm-amber text-phantasm-amber px-4 py-2 flex items-center justify-center font-mono text-sm shadow-md z-50">
-          <AlertTriangle className="w-4 h-4 mr-2 shrink-0" />
-          <span className="font-bold tracking-wide">MOCK SIMULATION MODE — NOT CONNECTED TO PRODUCTION SAHYOG</span>
+        {/* DEEP TAUPE/OLIVE MONOSPACE WARNING BAR */}
+        <div className="w-full bg-[#38322B] border-b border-[#2A251F] text-[#F5EDE4] px-4 py-2 flex items-center justify-center font-mono text-xs shadow-sm z-30">
+          <AlertTriangle className="w-3.5 h-3.5 mr-2 shrink-0 text-[#C58B2B]" />
+          <span className="font-semibold tracking-wide text-[#F5EDE4]">
+            MOCK SIMULATION MODE — NOT CONNECTED TO PRODUCTION SAHYOG
+          </span>
         </div>
 
-        {/* Header */}
-        <header className="h-16 bg-phantasm-surface/80 backdrop-blur-sm border-b border-phantasm-border flex items-center justify-end px-8 z-10">
+        {/* Top Header */}
+        <header className="h-16 nova-glass-card-subtle border-b border-[#E5DACB] flex items-center justify-end px-8 z-20">
           {/* Officer Session Indicator */}
           <div className="flex items-center space-x-4">
             <div className="flex flex-col items-end">
-              <span className="text-sm font-semibold text-gray-200">Offc. A. Sharma (IO)</span>
-              <span className="text-xs text-phantasm-cyan font-mono">ID: SHM-8891-ND</span>
+              <span className="text-sm font-bold text-[#2A211C]">Offc. A. Sharma (IO)</span>
+              <span className="text-xs text-[#B08D57] font-mono font-bold">ID: SHM-8891-ND</span>
             </div>
-            <div className="w-10 h-10 rounded-full bg-phantasm-border flex items-center justify-center border border-phantasm-cyan/30 text-phantasm-cyan">
+            <div className="w-10 h-10 rounded-2xl flex items-center justify-center border border-[#52161A] bg-[#6B1E24] font-serif font-bold text-sm text-[#FAF5EE] shadow-sm">
               AS
             </div>
-            <button className="p-2 text-gray-400 hover:text-phantasm-amber transition-colors ml-2" title="End Session">
+            <button className="p-2 text-[#8A7A6E] hover:text-[#5C1A1B] transition-colors ml-1" title="End Session">
               <LogOut className="w-5 h-5" />
             </button>
           </div>
@@ -71,3 +100,4 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+

@@ -1,24 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-phantasm-bg: #0A0F1D;
-  --color-phantasm-surface: #111A2E;
-  --color-phantasm-border: #1E2D4A;
-  --color-phantasm-cyan: #00E5FF;
-  --color-phantasm-amber: #FFB300;
+  --color-phantasm-bg: #F5EDE4;
+  --color-phantasm-surface: #FAF5EE;
+  --color-phantasm-border: #E5DACB;
+  --color-phantasm-cyan: #B08D57;
+  --color-phantasm-amber: #C58B2B;
 }
 
 @layer base {
   :root {
-    --bg: #0A0F1D;
-    --surface: #111A2E;
-    --border: #1E2D4A;
-    --cyan: #00E5FF;
-    --amber: #FFB300;
+    --bg: #F5EDE4;
+    --surface: #FAF5EE;
+    --border: #E5DACB;
+    --cyan: #B08D57;
+    --amber: #C58B2B;
+    --burgundy: #6B1E24;
   }
   
   body {
     background-color: var(--bg);
-    color: white;
+    color: #2A211C;
   }
 }
+
