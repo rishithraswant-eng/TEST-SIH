@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { InvestigationProvider } from "@/app/lib/store";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -13,8 +14,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PHANTASM",
-  description: "Graph Resolution Engine",
+  title: "PHANTASM — Graph Resolution Engine",
+  description: "Cyber Crime & Digital Forensics Law Enforcement Platform",
 };
 
 export default function RootLayout({
@@ -25,9 +26,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-phantasm-bg`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-[#050912] text-gray-100 selection:bg-cyan-500 selection:text-black`}
       >
-        {children}
+        <InvestigationProvider>
+          {children}
+        </InvestigationProvider>
       </body>
     </html>
   );
