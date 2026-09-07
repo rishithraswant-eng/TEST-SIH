@@ -1,10 +1,5 @@
-import AppShell from "./components/layout/AppShell";
-import CaseWizard from "./components/cases/CaseWizard";
+import CinematicLandingPage from './components/landing/CinematicLandingPage';
 
 export default function Home() {
-  return (
-    <AppShell>
-      <CaseWizard />
-    </AppShell>
-  );
+  return <CinematicLandingPage />;
 }
